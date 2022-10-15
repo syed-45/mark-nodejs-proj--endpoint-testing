@@ -69,4 +69,91 @@ app.get("/quest/decline", (req, res) => {
   });
 });
 
+app.get("/quest/start/impossible", (req, res) => {
+  res.json({
+    location: "Venus",
+    speech: {
+      speaker: {
+        name: "Gigantica",
+        description: "A large creature",
+      },
+      text: "THOU SHALL FACE AN EXCRUCIATING DEATH ENFORCED BY THE DRAGONS OF VENUS, FIREBALL!",
+    },
+    options: {
+      fight: "/quest/start/impossible/fight",
+      restart: "/",
+    },
+  });
+});
+
+app.get("/quest/start/hard", (req, res) => {
+  res.json({
+    location: 'Nuketown',
+    speech: {
+      speaker: {name: 'Zidane', description: 'leader of zombies'},
+      text:
+        "Muhahaha, my army of zombies will devour you. Death is inevitable.",
+    },
+    options: {
+      restart: '/'
+    },
+  });
+});
+
+app.get("/quest/start/easy", (req, res) => {
+  res.json({
+    location: 'The swamp',
+    speech: {
+      speaker: {name: 'Alli', description: 'A creature half man, half alligator'},
+      text:
+        "Welcome to my swamp, you have come to your death",
+    },
+    options: {
+      restart: '/',
+      fight: '/quest/start/easy/fight'
+    },
+  });
+});
+
+app.get("/quest/start/easy/fight", (req, res) => {
+  res.json({
+    location: 'The swamp',
+    speech: {
+      speaker: {name: 'Alli', description: 'A creature half man, half alligator'},
+      text:
+        "haha there is no where to run, fight to your death",
+    },
+    options: {
+      restart: '/',
+      'throw sledgehammer': '/sledge',
+      'punch him in the face': '/punch',      
+    },
+  });
+});
+
+app.get("/quest/start/easy/fight/sledge", (req, res) => {
+  res.json({
+    location: 'The swamp',
+    speech: {
+      speaker: {name: 'Alli', description: 'A creature half man, half alligator'},
+      text:
+        "Aaargh, you will pay for that! Take that.",
+    },
+    scene :{
+      description: 'Alli the alligator man is hit on the chest with the sledgehammer. He starts to bleed. Alli throws the sledge back at you.'
+    },
+    options: {
+      restart: '/',
+      "dodge Alli's throw" : '/dodge',      
+      'catch the sledgehammer' : '/catch'
+    },
+  });
+})
+
+//reflections
+// tdd gives good environment to produce well written / less breakable code
+// allows dev to think ahead for what they want function to do.
+//might need to look over regexp in future.
+
+
 export default app;

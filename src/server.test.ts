@@ -56,7 +56,7 @@ test("GET /quest/decline responds with an apocalyptic message", async () => {
   expect(response.body.options).toStrictEqual({ restart: "/" });
 });
 
-test.skip("GET /quest/start/impossible responds with instant 'death'", async () => {
+test("GET /quest/start/impossible responds with instant 'death'", async () => {
   const response = await supertest(app).get("/quest/start/impossible");
 
   // there is _some_ location
@@ -73,3 +73,78 @@ test.skip("GET /quest/start/impossible responds with instant 'death'", async () 
   // includes option to restart
   expect(response.body.options).toMatchObject({ restart: "/" });
 });
+
+test("GET /quest/help responds with info about quest and how to navigate around", async () => {
+  const response = await supertest(app).get("/quest/help");
+
+  // there is _some_ speaker
+  // expect(response.body.speech.speaker).toBeDefined();
+  expect(response.body).toBeDefined();
+  // there is some info on the quest
+  // expect(response.body.speech.text).toMatch(/adventure/i);
+
+  // // there is some info on navigating the quest
+  // expect(response.body.speech.text).toMatch(/endpoint/i);
+
+  // // includes option to go back to start
+  // expect(response.body.options).toMatchObject({ restart: "/" });
+});
+
+test("GET /quest/start/hard responds with zombies", async () => {
+  const response = await supertest(app).get("/quest/start/hard");
+
+  // located in nuketown
+  expect(response.body.location).toBe("Nuketown");
+
+  // zombie leader
+  expect(response.body.speech.speaker.name).toBe("Zidane");
+
+  // face zombies
+  expect(response.body.speech.text).toMatch(/death/i);
+  expect(response.body.speech.text).toMatch(/zombie/i);
+
+  // only includes the option to restart
+  expect(response.body.options).toMatchObject({ restart: "/" });
+});
+
+test("GET /quest/start/easy responds with alligator man", async () => {
+  const response = await supertest(app).get("/quest/start/easy");
+
+  // located in swamp
+  expect(response.body.location).toBe("The swamp");
+
+  // alli
+  expect(response.body.speech.speaker.description).toBe("A creature half man, half alligator");
+
+  // face alli the alligator man
+  expect(response.body.speech.text).toMatch(/death/i);
+  expect(response.body.speech.text).toMatch(/swamp/i);
+
+  // includes the option to restart
+  expect(response.body.options).toMatchObject({ restart: "/" });
+});
+
+test("GET /quest/start/easy/fight responds with fight with alligator man", async () => {
+  const response = await supertest(app).get("/quest/start/easy/fight");
+
+  // face alli the alligator man
+  expect(response.body.speech.text).toMatch(/fight/i);
+  expect(response.body.speech.text).toMatch(/haha/i);
+
+  // includes the option to restart
+  expect(response.body.options).toMatchObject({ restart: "/" });
+  expect(Object.keys(response.body.options).length).toBeGreaterThan(2)
+});
+
+test("GET /quest/start/easy/fight/sledge responds with alligator man", async () => {
+  const response = await supertest(app).get("/quest/start/easy/fight/sledge");
+
+  // alli the alligator man is hit!
+  expect(response.body.scene.description).toMatch(/sledgehammer/i);
+  expect(response.body.scene.description).toMatch(/bleed/i);
+
+  // includes the option to restart
+  expect(response.body.options).toMatchObject({ restart: "/" });
+  expect(Object.keys(response.body.options).length).toBeGreaterThan(2)
+});
+
